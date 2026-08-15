@@ -93,7 +93,6 @@ export default function App() {
   const [musicLyrics, setMusicLyrics] = useState('');
   const [musicTags, setMusicTags] = useState('');
   const [musicTitle, setMusicTitle] = useState('');
-  const [makeInstrumental, setMakeInstrumental] = useState(false);
   const [isMusicGenerating, setIsMusicGenerating] = useState(false);
   const [musicStatusMsg, setMusicStatusMsg] = useState('');
   const [musicResultUrl, setMusicResultUrl] = useState<string | null>(null);
@@ -251,9 +250,6 @@ export default function App() {
   const [voiceLang, setVoiceLang] = useState(() => {
     try { return localStorage.getItem('locarno_voice_lang') || 'es-CO'; } catch { return 'es-CO'; }
   });
-  const [anthropicApiKey, setAnthropicApiKey] = useState(() => {
-    try { return localStorage.getItem('locarno_anthropic_key') || ''; } catch { return ''; }
-  });
   const [showMenu, setShowMenu] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -352,10 +348,6 @@ export default function App() {
   }, [voiceLang]);
 
   useEffect(() => {
-    try { localStorage.setItem('locarno_anthropic_key', anthropicApiKey); } catch {}
-  }, [anthropicApiKey]);
-
-  useEffect(() => {
     try { localStorage.setItem('locarno_profile_photo', profilePhoto); } catch {}
   }, [profilePhoto]);
 
@@ -412,7 +404,6 @@ export default function App() {
     try {
       const cred = await createUserWithEmailAndPassword(auth, accountEmail.trim(), accountPassword);
       await setDoc(doc(db, 'usuarios', cred.user.uid), { userName, assistantName, messages }, { merge: true });
-      setShowAccountModal(false);
       setAccountEmail('');
       setAccountPassword('');
     } catch (e: any) {
@@ -431,7 +422,6 @@ export default function App() {
     setAccountLoading(true);
     try {
       await signInWithEmailAndPassword(auth, accountEmail.trim(), accountPassword);
-      setShowAccountModal(false);
       setAccountEmail('');
       setAccountPassword('');
     } catch (e: any) {
